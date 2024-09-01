@@ -1,26 +1,25 @@
 # nebulaorm
 
-[中文](README_CN.md)
+[English](README.md)
 
 [![go report card](https://goreportcard.com/badge/haysons/nebulaorm)](https://goreportcard.com/report/github.com/haysons/nebulaorm)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-## Introduction
+## 简介
 
-nebulaorm is an orm framework designed specifically for nebula graph. 
-It aims to improve the golang experience with nebula graph by chaining together nGQL statements in a more elegant and 
-faster way, and parsing the returned result set and assigning it to developer-supplied variables.
+nebulaorm 是一个专为 nebula graph 设计的 orm 框架，通过链式调用以更优雅、快速的方式拼接 nGQL 语句，并解析返回的结果集，
+将其赋值给开发者提供的变量，旨在提高golang对于nebula graph的使用体验。
 
-## Installation
+## 安装
 
 ```
 go get github.com/haysons/nebulaorm
 ```
 
-## Quick Start
+## 快速开始
 
 ``` go
-// Player vertex player
+// Player 节点
 type Player struct {
     VID  string `norm:"vertex_id"`
     Name string `norm:"prop:name"`
@@ -35,7 +34,7 @@ func (p Player) VertexTagName() string {
     return "player"
 }
 
-// Team vertex team
+// Team 节点
 type Team struct {
     VID  string `norm:"vertex_id"`
     Name string `norm:"prop:name"`
@@ -49,7 +48,7 @@ func (t Team) VertexTagName() string {
     return "team"
 }
 
-// Serve edge Serve
+// Serve 边
 type Serve struct {
     SrcID     string `norm:"edge_src_id"`
     DstID     string `norm:"edge_dst_id"`
@@ -62,9 +61,9 @@ func (s Serve) EdgeTypeName() string {
     return "serve"
 }
 
-// Note: Currently there is no support for inlining other struct when declaring struct, so please keep multiple copies of duplicate fields.
+// 注: 目前在声明结构体时还不支持内嵌其他结构体，重复的字段请保留多份
 func main() {
-    // initialize the db object
+    // 初始化db对象
     conf := &nebulaorm.Config{
         Username:    "root",
         Password:    "nebula",
@@ -77,7 +76,7 @@ func main() {
     }
     defer db.Close()
     
-    // insert the player vertex
+    // 写入player节点
     player := &Player{
         VID:  "player1001",
         Name: "Kobe Bryant",
@@ -86,7 +85,7 @@ func main() {
     if err := db.InsertVertex(player).Exec(); err != nil {
         log.Fatalf("insert player failed: %v", err)
     }
-    // insert the team vertex
+    // 写入team节点
     team := &Team{
         VID:  "team1001",
         Name: "Lakers",
@@ -94,7 +93,7 @@ func main() {
     if err := db.InsertVertex(team).Exec(); err != nil {
         log.Fatalf("insert team failed: %v", err)
     }
-    // insert the serve edge
+    // 写入serve边
     serve := &Serve{
         SrcID:     "player1001",
         DstID:     "team1001",
@@ -105,7 +104,7 @@ func main() {
         log.Fatalf("insert serve failed: %v", err)
     }
 
-    // find the player vertex
+    // 查询player节点
     player = new(Player)
     err = db.
         Fetch("player", "player1001").
@@ -116,7 +115,7 @@ func main() {
     }
     log.Printf("player: %+v", player)
     
-    // count the number of vertexes that the player vertex connects through different edges
+    // 统计player节点通过不同边关联到的节点的数量
     type edgeCnt struct {
         Edge string `norm:"col:e"`
         Cnt  int    `norm:"col:cnt"`
@@ -138,27 +137,27 @@ func main() {
 }
 ```
 
-## Features
+## 特性
 
-* Fast splicing of nGQL by chained calls
-* Friendly support for parsing and assigning compound types such as vertex, edge, list, map, set
-* Fully unit tested
-* Developer Friendly
+* 通过链式调用快速拼接nGQL语句
+* 对于复合类型的解析和赋值提供友好地支持，例如：vertex, edge, list, map, set
+* 完善的单元测试
+* 开发者友好
 
-## Contributing
+## 贡献
 
-Contributions are welcome! Please submit a pull request.
+欢迎您做贡献! 请提交 pull request.
 
-## Acknowledgements
+## 致谢
 
-This project was inspired and helped by the following open source projects during the development process:
+本项目在开发过程中得到了以下开源项目的启发和帮助：
 
-* **gorm**: The fantastic ORM library for Golang, aims to be developer friendly.
+* **gorm**: 适用于 Golang 的梦幻般的 ORM 库，旨在为开发人员提供方便。
 
-Thanks to the authors of these projects for their contributions to the open source community!
+感谢这些项目的作者为开源社区做出的贡献！
 
-## License
+## 许可证
 
 2024-NOW hayson
 
-Released under the [MIT License](./LICENSE)
+使用 [MIT License](./LICENSE)
