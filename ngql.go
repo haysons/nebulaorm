@@ -193,3 +193,18 @@ func (db *DB) DeleteEdge(edgeTypeName string, edge interface{}) (tx *DB) {
 	tx.Statement.DeleteEdge(edgeTypeName, edge)
 	return
 }
+
+// When generate when edge clause
+// see more information on the method of the same name in statement.Statement
+func (db *DB) When(query string, args ...interface{}) (tx *DB) {
+	tx = db.getInstance()
+	tx.Statement.When(query, args...)
+	return
+}
+
+// Pipe add a pipe character in current nGQL
+func (db *DB) Pipe() (tx *DB) {
+	tx = db.getInstance()
+	tx.Statement.Pipe()
+	return
+}

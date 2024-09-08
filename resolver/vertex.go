@@ -90,7 +90,7 @@ func (v *VertexSchema) parseVID(vertexType reflect.Type) error {
 		v.vidMethodIndex = vidMethod.Index
 		v.vidReceiverIsPtr = true
 	} else {
-		return fmt.Errorf("nebulaorm: parse vertex failed, cannnot get vertex_id method")
+		return fmt.Errorf("nebulaorm: parse vertex failed, cannot get vertex_id method")
 	}
 	// if the struct contains a vid field, save it and assign it to it when scanning
 	for i := 0; i < vertexType.NumField(); i++ {
@@ -200,7 +200,7 @@ func (v *VertexSchema) GetTags() []*VertexTag {
 	return v.tags
 }
 
-// Scan assign the nodes returned by the nebula graph to the vertex data in the business layer
+// Scan assigns the nodes returned by the nebula graph to the vertex data in the business layer
 func (v *VertexSchema) Scan(node *nebula.Node, destValue reflect.Value) error {
 	// schema parsing and assignment can support structs or struct pointers
 	destValue = reflect.Indirect(destValue)

@@ -63,7 +63,7 @@ func (stmt *Statement) SetClausesBuild(clauses []string) {
 	part.SetClausesBuild(clauses)
 }
 
-// Build the current statement; any problems during build will return err
+// Build the current statement; any problems during build will return erring
 func (stmt *Statement) Build() error {
 	if stmt.err != nil || stmt.built {
 		return stmt.err
@@ -94,7 +94,7 @@ func (stmt *Statement) Build() error {
 	return stmt.err
 }
 
-// NGQL build and return the nGQL statement, returning err if there is a problem with the build
+// NGQL build and return the nGQL statement, returning erring if there is a problem with the build
 func (stmt *Statement) NGQL() (string, error) {
 	if err := stmt.Build(); err != nil {
 		return "", err

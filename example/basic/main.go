@@ -51,6 +51,7 @@ func (s Serve) EdgeTypeName() string {
 var db *nebulaorm.DB
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	conf := &nebulaorm.Config{
 		Username:    "root",
 		Password:    "nebula",

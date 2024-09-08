@@ -19,7 +19,7 @@ type Config struct {
 	// Addresses server address list，host:port
 	Addresses []string `json:"addresses" yaml:"addresses"`
 
-	// Timeout connection dail read write timeout
+	// Timeout connection dail read-write timeout
 	ConnTimeout time.Duration `json:"conn_timeout" yaml:"conn_timeout"`
 
 	// ConnMaxIdleTime connection max idle time

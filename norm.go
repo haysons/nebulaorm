@@ -12,7 +12,7 @@ import (
 
 // DB will use statement.Statement to construct the nGQL statement, and then hand it over to nebula.SessionPool to execute
 // the statement, and you can eventually get the result of the execution through methods such as Find Exec Pluck.  DB is
-// concurrency-safe, and multiple  statements can be executed by a single DB object at the same time. The nebula graph
+// concurrency-safe, and multiple statements can be executed by a single DB object at the same time. The nebula graph
 // officially provides a SessionPool, which eliminates the need for the application layer to implement a connection pool.
 // So in most cases, the application layer only needs to use a single DB instance.
 // However, statement.Statement is not concurrency-safe, so don't concurrently build nGQL statements.

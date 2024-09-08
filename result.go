@@ -212,12 +212,12 @@ func pluck(rawRes *nebula.ResultSet, col string, dest interface{}, raiseNotFound
 		return fmt.Errorf("nebulaorm: get values by col name failed: %w", err)
 	}
 	destValue := reflect.ValueOf(dest)
-	if destValue.Kind() != reflect.Ptr {
-		return fmt.Errorf("nebulaorm: %w, scan dest should be pointer to struct, slice or array", ErrInvalidValue)
+	if destValue.Kind() != reflect.Ptr && destValue.Kind() != reflect.Map {
+		return fmt.Errorf("nebulaorm: %w, dest must be able to assign, such as pointers for each type or map", ErrInvalidValue)
 	}
 	destValue = utils.PtrValue(destValue)
 	if !destValue.IsValid() {
-		return fmt.Errorf("nebulaorm: %w, scan dest should be pointer to struct, slice or array", ErrInvalidValue)
+		return fmt.Errorf("nebulaorm: %w, dest must be able to assign, such as pointers for each type or map", ErrInvalidValue)
 	}
 	rv := resolver.NewResolver()
 	switch destValue.Kind() {

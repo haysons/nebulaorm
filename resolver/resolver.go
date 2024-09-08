@@ -48,13 +48,13 @@ func NewResolver() *Resolver {
 
 // ScanValue scan nebula graph value into dest value.
 func (r *Resolver) ScanValue(nebulaValue *nebula.ValueWrapper, destValue reflect.Value) error {
-	if !destValue.CanSet() {
+	if !destValue.CanSet() && destValue.Kind() != reflect.Map {
 		return fmt.Errorf("nebulaorm: scan dest value failed, %w", ErrValueCannotSet)
 	}
-	destValue = utils.PtrValue(destValue)
 	switch nebulaValue.GetType() {
 	case NebulaDataTypeVertex:
 		vNode, _ := nebulaValue.AsNode()
+		destValue = utils.PtrValue(destValue)
 		switch destValue.Kind() {
 		case reflect.Struct:
 			destType := destValue.Type()
@@ -67,6 +67,7 @@ func (r *Resolver) ScanValue(nebulaValue *nebula.ValueWrapper, destValue reflect
 		}
 	case NebulaDataTypeEdge:
 		vRelationShip, _ := nebulaValue.AsRelationship()
+		destValue = utils.PtrValue(destValue)
 		switch destValue.Kind() {
 		case reflect.Struct:
 			destType := destValue.Type()
@@ -79,6 +80,7 @@ func (r *Resolver) ScanValue(nebulaValue *nebula.ValueWrapper, destValue reflect
 		}
 	case NebulaDataTypeList:
 		vList, _ := nebulaValue.AsList()
+		destValue = utils.PtrValue(destValue)
 		switch destValue.Kind() {
 		case reflect.Slice, reflect.Array:
 			return utils.SliceSetElem(destValue, len(vList), func(i int, elem reflect.Value) (bool, error) {
@@ -94,6 +96,7 @@ func (r *Resolver) ScanValue(nebulaValue *nebula.ValueWrapper, destValue reflect
 		}
 	case NebulaDataTypeMap:
 		vMap, _ := nebulaValue.AsMap()
+		destValue = utils.PtrValue(destValue)
 		switch destValue.Kind() {
 		case reflect.Map:
 			destType := destValue.Type()
@@ -101,6 +104,9 @@ func (r *Resolver) ScanValue(nebulaValue *nebula.ValueWrapper, destValue reflect
 				return errors.New("nebulaorm: scan dest value failed, map key must be string")
 			}
 			elemType := destType.Elem()
+			if destValue.IsNil() && destValue.CanSet() {
+				destValue.Set(reflect.MakeMap(destType))
+			}
 			for key, value := range vMap {
 				elemValue := reflect.New(elemType).Elem()
 				if err := r.ScanValue(&value, elemValue); err != nil {
@@ -113,6 +119,7 @@ func (r *Resolver) ScanValue(nebulaValue *nebula.ValueWrapper, destValue reflect
 		}
 	case NebulaDataTypeSet:
 		vSet, _ := nebulaValue.AsDedupList()
+		destValue = utils.PtrValue(destValue)
 		switch destValue.Kind() {
 		case reflect.Slice, reflect.Array:
 			return utils.SliceSetElem(destValue, len(vSet), func(i int, elem reflect.Value) (bool, error) {
